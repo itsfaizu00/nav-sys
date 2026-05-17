@@ -1,0 +1,35 @@
+{
+  "name": "Integral University Campus Navigator",
+  "short_name": "Campus Nav",
+  "description": "GPS-powered campus navigation for Integral University",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#0a0c10",
+  "theme_color": "#00d4aa",
+  "orientation": "portrait-primary",
+  "categories": ["navigation", "education"],
+  "icons": [
+    {
+      "src": "icon-192.svg",
+      "sizes": "192x192",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "icon-512.svg",
+      "sizes": "512x512",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Get Directions",
+      "short_name": "Navigate",
+      "description": "Quick navigation to campus locations",
+      "url": "/?action=navigate",
+      "icons": [{ "src": "icon-192.png", "sizes": "192x192" }]
+    }
+  ]
+}

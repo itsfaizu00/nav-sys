@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+  <meta name="theme-color" content="#00d4aa"/>
+  <meta name="description" content="Login - Campus Navigator"/>
+  <meta name="apple-mobile-web-app-capable" content="yes"/>
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
+  <meta name="apple-mobile-web-app-title" content="Campus Navigator"/>
+  <link rel="manifest" href="manifest.json"/>
+  <link rel="apple-touch-icon" href="icon-192.svg"/>
+  <title>Login - Campus Navigator</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    :root {
+      --clr-bg: #0a0c10;
+      --clr-panel: rgba(10, 12, 16, 0.95);
+      --clr-border: rgba(255, 255, 255, 0.12);
+      --clr-accent: #00d4aa;
+      --clr-accent2: #ff6b35;
+      --clr-text: #f8fafc;
+      --clr-muted: rgba(248, 250, 252, 0.66);
+      --clr-label: rgba(248, 250, 252, 0.54);
+      --clr-error: #ff4757;
+      --font-display: 'Syne', sans-serif;
+      --font-body: 'DM Sans', sans-serif;
+    }
+
+    html, body {
+      width: 100%;
+      min-height: 100%;
+      background:
+        radial-gradient(circle at 20% 20%, rgba(0, 212, 170, 0.16), transparent 28%),
+        radial-gradient(circle at 80% 0%, rgba(255, 107, 53, 0.12), transparent 30%),
+        var(--clr-bg);
+      color: var(--clr-text);
+      font-family: var(--font-body);
+    }
+
+    body {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .login-container {
+      width: 100%;
+      max-width: 420px;
+    }
+
+    .login-box {
+      background: var(--clr-panel);
+      border: 1px solid var(--clr-border);
+      border-radius: 20px;
+      box-shadow: 0 12px 48px rgba(0, 0, 0, 0.56), inset 0 1px 0 rgba(255, 255, 255, 0.08);
+      padding: 44px 32px;
+      backdrop-filter: blur(24px);
+    }
+
+    .login-header {
+      text-align: center;
+      margin-bottom: 34px;
+    }
+
+    .brand-dot {
+      display: inline-block;
+      width: 16px;
+      height: 16px;
+      margin-bottom: 16px;
+      border-radius: 999px;
+      background: var(--clr-accent);
+      box-shadow: 0 0 18px rgba(0, 212, 170, 0.85);
+    }
+
+    h1 {
+      font-family: var(--font-display);
+      font-size: 28px;
+      line-height: 1.1;
+      margin-bottom: 8px;
+    }
+
+    .login-header p {
+      color: var(--clr-muted);
+      font-size: 14px;
+    }
+
+    .form-group {
+      margin-bottom: 20px;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 8px;
+      color: var(--clr-label);
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    input[type="text"],
+    input[type="password"] {
+      width: 100%;
+      min-height: 48px;
+      border: 1px solid var(--clr-border);
+      border-radius: 12px;
+      background: rgba(255, 255, 255, 0.06);
+      color: var(--clr-text);
+      font: inherit;
+      outline: none;
+      padding: 0 14px;
+    }
+
+    input:focus {
+      border-color: var(--clr-accent);
+      box-shadow: 0 0 0 3px rgba(0, 212, 170, 0.16);
+    }
+
+    .form-error {
+      min-height: 18px;
+      margin-top: 6px;
+      color: var(--clr-error);
+      font-size: 12px;
+      opacity: 0;
+    }
+
+    .form-error.show {
+      opacity: 1;
+    }
+
+    .checkbox-group {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      margin: 4px 0 24px;
+      color: var(--clr-muted);
+    }
+
+    .checkbox-group label {
+      margin: 0;
+      color: var(--clr-muted);
+      font-size: 13px;
+      font-weight: 500;
+      letter-spacing: 0;
+      text-transform: none;
+    }
+
+    .login-button {
+      width: 100%;
+      min-height: 50px;
+      border: 0;
+      border-radius: 12px;
+      background: linear-gradient(135deg, var(--clr-accent), var(--clr-accent2));
+      color: #06100e;
+      cursor: pointer;
+      font-family: var(--font-display);
+      font-size: 15px;
+      font-weight: 800;
+      transition: transform 160ms ease, filter 160ms ease;
+    }
+
+    .login-button:hover {
+      filter: brightness(1.04);
+      transform: translateY(-1px);
+    }
+
+    .login-button.loading {
+      cursor: wait;
+      opacity: 0.82;
+    }
+
+    .demo-users {
+      margin-top: 22px;
+      padding: 14px;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 12px;
+      background: rgba(255, 255, 255, 0.04);
+      color: var(--clr-muted);
+      font-size: 13px;
+      line-height: 1.55;
+    }
+
+    .form-footer {
+      margin-top: 22px;
+      color: var(--clr-muted);
+      font-size: 13px;
+      text-align: center;
+    }
+
+    .form-footer a {
+      color: var(--clr-accent);
+      text-decoration: none;
+    }
+
+    @media (max-width: 480px) {
+      body {
+        padding: 14px;
+      }
+
+      .login-box {
+        padding: 34px 22px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="login-container">
+    <section class="login-box">
+      <div class="login-header">
+        <span class="brand-dot"></span>
+        <h1>Campus Navigator</h1>
+        <p>Sign in to access the campus map</p>
+      </div>
+
+      <form id="login-form">
+        <div class="form-group">
+          <label for="username">Email or Student ID</label>
+          <input id="username" type="text" placeholder="you@integral.edu or 2024001" autocomplete="username" required/>
+          <div class="form-error" id="username-error"></div>
+        </div>
+
+        <div class="form-group">
+          <label for="password">Password</label>
+          <input id="password" type="password" placeholder="Enter your password" autocomplete="current-password" required/>
+          <div class="form-error" id="password-error"></div>
+        </div>
+
+        <div class="checkbox-group">
+          <input type="checkbox" id="remember-me"/>
+          <label for="remember-me">Remember me on this device</label>
+        </div>
+
+        <button type="submit" class="login-button">
+          <span class="button-text">Sign In</span>
+        </button>
+
+        <div class="demo-users">
+          <strong>Demo Credentials:</strong><br/>
+          Email: user@integral.edu<br/>
+          Password: password123
+        </div>
+      </form>
+
+      <div class="form-footer">
+        Forgot your password? <a href="#reset">Reset here</a>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    const loginForm = document.getElementById('login-form');
+    const usernameInput = document.getElementById('username');
+    const passwordInput = document.getElementById('password');
+    const rememberCheckbox = document.getElementById('remember-me');
+
+    const DEMO_USERS = {
+      'user@integral.edu': 'password123',
+      '2024001': 'password123',
+      'admin@integral.edu': 'admin123'
+    };
+
+    function validateCredentials(username, password) {
+      if (DEMO_USERS[username] && DEMO_USERS[username] === password) {
+        return {
+          success: true,
+          user: {
+            id: username.split('@')[0],
+            email: username,
+            name: username.includes('@') ? 'Student User' : 'Student ' + username
+          }
+        };
+      }
+
+      return { success: false, error: 'Invalid email or password' };
+    }
+
+    function createToken(userId) {
+      return 'token_' + userId + '_' + Date.now() + '_' + Math.random().toString(36).slice(2, 11);
+    }
+
+    function redirectToApp() {
+      const redirectDest = sessionStorage.getItem('redirect_after_login') || 'app.html';
+      sessionStorage.removeItem('redirect_after_login');
+      window.location.href = redirectDest;
+    }
+
+    loginForm.addEventListener('submit', async (event) => {
+      event.preventDefault();
+
+      const username = usernameInput.value.trim();
+      const password = passwordInput.value;
+      const usernameError = document.getElementById('username-error');
+      const passwordError = document.getElementById('password-error');
+
+      usernameError.classList.remove('show');
+      passwordError.classList.remove('show');
+
+      if (!username) {
+        usernameError.textContent = 'Email or Student ID is required';
+        usernameError.classList.add('show');
+        return;
+      }
+
+      if (!password) {
+        passwordError.textContent = 'Password is required';
+        passwordError.classList.add('show');
+        return;
+      }
+
+      const button = loginForm.querySelector('.login-button');
+      const originalText = button.innerHTML;
+      button.classList.add('loading');
+      button.innerHTML = '<span class="button-text">Signing in...</span>';
+
+      await new Promise((resolve) => setTimeout(resolve, 500));
+      const result = validateCredentials(username, password);
+
+      if (result.success) {
+        const token = createToken(result.user.id);
+        localStorage.setItem('nav_sys_user', JSON.stringify(result.user));
+        localStorage.setItem('nav_sys_token', token);
+        localStorage.setItem('nav_sys_timestamp', new Date().toISOString());
+
+        if (rememberCheckbox.checked) {
+          localStorage.setItem('nav_sys_remember', 'true');
+        } else {
+          localStorage.removeItem('nav_sys_remember');
+        }
+
+        redirectToApp();
+        return;
+      }
+
+      button.classList.remove('loading');
+      button.innerHTML = originalText;
+      passwordError.textContent = result.error;
+      passwordError.classList.add('show');
+      passwordInput.value = '';
+      passwordInput.focus();
+    });
+  </script>
+</body>
+</html>

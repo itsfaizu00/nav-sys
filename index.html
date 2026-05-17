@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+  <meta name="theme-color" content="#00d4aa"/>
+  <meta name="description" content="Login - Campus Navigator"/>
+  <meta name="apple-mobile-web-app-capable" content="yes"/>
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
+  <meta name="apple-mobile-web-app-title" content="Campus Navigator"/>
+  <link rel="manifest" href="manifest.json"/>
+  <link rel="apple-touch-icon" href="icon-192.svg"/>
+  <title>Login - Campus Navigator</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
+  <script>
+    if (localStorage.getItem('nav_sys_user') && localStorage.getItem('nav_sys_token')) {
+      window.location.href = 'app.html';
+    }
+  </script>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --clr-bg: #0a0c10;
+      --clr-panel: rgba(10, 12, 16, 0.95);
+      --clr-border: rgba(255, 255, 255, 0.12);
+      --clr-accent: #00d4aa;
+      --clr-accent2: #ff6b35;
+      --clr-text: #f8fafc;
+      --clr-muted: rgba(248, 250, 252, 0.66);
+      --clr-label: rgba(248, 250, 252, 0.54);
+      --clr-error: #ff4757;
+      --font-display: 'Syne', sans-serif;
+      --font-body: 'DM Sans', sans-serif;
+    }
+    html, body {
+      width: 100%;
+      min-height: 100%;
+      background:
+        radial-gradient(circle at 20% 20%, rgba(0, 212, 170, 0.16), transparent 28%),
+        radial-gradient(circle at 80% 0%, rgba(255, 107, 53, 0.12), transparent 30%),
+        var(--clr-bg);
+      color: var(--clr-text);
+      font-family: var(--font-body);
+    }
+    body { display: flex; align-items: center; justify-content: center; padding: 20px; }
+    .login-container { width: 100%; max-width: 440px; }
+    .login-box { background: var(--clr-panel); border: 1px solid var(--clr-border); border-radius: 20px; box-shadow: 0 12px 48px rgba(0, 0, 0, 0.56), inset 0 1px 0 rgba(255,255,255,0.08); padding: 44px 32px; backdrop-filter: blur(24px); }
+    .login-header { text-align: center; margin-bottom: 24px; }
+    .brand-dot { display:inline-block; width: 16px; height: 16px; margin-bottom: 16px; border-radius: 999px; background: var(--clr-accent); box-shadow: 0 0 18px rgba(0, 212, 170, 0.85); }
+    h1 { font-family: var(--font-display); font-size: 28px; line-height: 1.1; margin-bottom: 8px; }
+    .login-header p { color: var(--clr-muted); font-size: 14px; }
+    .auth-tabs { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 24px; }
+    .auth-tab { border: 1px solid var(--clr-border); border-radius: 14px; background: rgba(255,255,255,0.04); color: var(--clr-text); padding: 12px 0; cursor: pointer; font-weight: 700; transition: all 0.2s ease; }
+    .auth-tab.active { border-color: var(--clr-accent); background: rgba(0,212,170,0.12); color: var(--clr-accent); }
+    .form-group { margin-bottom: 20px; }
+    label { display:block; margin-bottom: 8px; color: var(--clr-label); font-size: 12px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; }
+    input[type="text"], input[type="password"] { width: 100%; min-height: 48px; border: 1px solid var(--clr-border); border-radius: 12px; background: rgba(255,255,255,0.06); color: var(--clr-text); font: inherit; outline: none; padding: 0 14px; }
+    input:focus { border-color: var(--clr-accent); box-shadow: 0 0 0 3px rgba(0,212,170,0.16); }
+    .form-error { min-height: 18px; margin-top: 6px; color: var(--clr-error); font-size: 12px; opacity: 0; transition: opacity 0.2s ease; }
+    .form-error.show { opacity: 1; }
+    .checkbox-group { display: flex; gap: 10px; align-items: center; margin: 4px 0 24px; color: var(--clr-muted); }
+    .checkbox-group label { margin: 0; font-size: 13px; font-weight: 500; letter-spacing: 0; text-transform: none; }
+    .login-button { width: 100%; min-height: 50px; border: 0; border-radius: 12px; background: linear-gradient(135deg, var(--clr-accent), var(--clr-accent2)); color: #06100e; cursor: pointer; font-family: var(--font-display); font-size: 15px; font-weight: 800; transition: transform 160ms ease, filter 160ms ease; }
+    .login-button:hover { filter: brightness(1.04); transform: translateY(-1px); }
+    .login-button.loading { cursor: wait; opacity: 0.82; }
+    .form-footer { margin-top: 20px; color: var(--clr-muted); font-size: 13px; text-align: center; }
+    .form-footer a { color: var(--clr-accent); text-decoration: none; }
+    .hidden { display: none !important; }
+    @media (max-width: 480px) { .login-box { padding: 34px 22px; } }
+  </style>
+</head>
+<body>
+  <main class="login-container">
+    <section class="login-box">
+      <div class="login-header">
+        <span class="brand-dot"></span>
+        <h1 id="auth-title">Campus Navigator</h1>
+        <p id="auth-subtitle">Sign in to access the campus map</p>
+      </div>
+
+      <div class="auth-tabs">
+        <button type="button" class="auth-tab active" data-mode="login">Sign In</button>
+        <button type="button" class="auth-tab" data-mode="signup">Sign Up</button>
+      </div>
+
+      <form id="auth-form">
+        <div class="form-group signup-field hidden" id="name-group">
+          <label for="full-name">Full Name</label>
+          <input id="full-name" type="text" autocomplete="name" placeholder="Your full name" />
+          <div class="form-error" id="name-error"></div>
+        </div>
+
+        <div class="form-group">
+          <label for="username">Email or Student ID</label>
+          <input id="username" type="text" autocomplete="username" placeholder="you@integral.edu or 2024001" required />
+          <div class="form-error" id="username-error"></div>
+        </div>
+
+        <div class="form-group">
+          <label for="password">Password</label>
+          <input id="password" type="password" autocomplete="current-password" placeholder="Enter your password" required />
+          <div class="form-error" id="password-error"></div>
+        </div>
+
+        <div class="form-group signup-field hidden" id="confirm-group">
+          <label for="confirm-password">Confirm Password</label>
+          <input id="confirm-password" type="password" autocomplete="new-password" placeholder="Repeat your password" />
+          <div class="form-error" id="confirm-error"></div>
+        </div>
+
+        <div class="checkbox-group" id="remember-group">
+          <input type="checkbox" id="remember-me" />
+          <label for="remember-me">Remember me on this device</label>
+        </div>
+
+        <button type="submit" class="login-button">
+          <span class="button-text">Sign In</span>
+        </button>
+
+        <div class="form-footer" id="switch-footer">
+          Don't have an account? <a href="#" id="form-switch-link">Create one</a>.
+        </div>
+      </form>
+    </section>
+  </main>
+
+  <script>
+    const authForm = document.getElementById('auth-form');
+    const tabs = document.querySelectorAll('.auth-tab');
+    const authTitle = document.getElementById('auth-title');
+    const authSubtitle = document.getElementById('auth-subtitle');
+    const switchFooter = document.getElementById('switch-footer');
+    const switchLink = document.getElementById('form-switch-link');
+    const nameGroup = document.getElementById('name-group');
+    const confirmGroup = document.getElementById('confirm-group');
+    const rememberGroup = document.getElementById('remember-group');
+    const fullNameInput = document.getElementById('full-name');
+    const usernameInput = document.getElementById('username');
+    const passwordInput = document.getElementById('password');
+    const confirmPasswordInput = document.getElementById('confirm-password');
+    const rememberCheckbox = document.getElementById('remember-me');
+
+    const ACCOUNTS_KEY = 'nav_sys_accounts';
+    let currentMode = 'login';
+
+    function loadAccounts() {
+      const raw = localStorage.getItem(ACCOUNTS_KEY);
+      if (!raw) return {};
+      try { return JSON.parse(raw); } catch { return {}; }
+    }
+
+    function saveAccounts(accounts) {
+      localStorage.setItem(ACCOUNTS_KEY, JSON.stringify(accounts));
+    }
+
+    function setMode(mode) {
+      currentMode = mode;
+      tabs.forEach((tab) => tab.classList.toggle('active', tab.dataset.mode === mode));
+      const isSignup = mode === 'signup';
+      nameGroup.classList.toggle('hidden', !isSignup);
+      confirmGroup.classList.toggle('hidden', !isSignup);
+      rememberGroup.classList.toggle('hidden', isSignup);
+      authTitle.textContent = isSignup ? 'Create an account' : 'Campus Navigator';
+      authSubtitle.textContent = isSignup ? 'Sign up to start navigating the campus' : 'Sign in to access the campus map';
+      switchFooter.innerHTML = isSignup
+        ? 'Already have an account? <a href="#" id="form-switch-link">Sign in</a>.'
+        : 'Don\'t have an account? <a href="#" id="form-switch-link">Create one</a>.';
+      authForm.querySelector('.login-button .button-text').textContent = isSignup ? 'Sign Up' : 'Sign In';
+      clearErrors();
+      attachSwitchLink();
+    }
+
+    function attachSwitchLink() {
+      const link = document.getElementById('form-switch-link');
+      if (!link) return;
+      link.addEventListener('click', (event) => {
+        event.preventDefault();
+        setMode(currentMode === 'login' ? 'signup' : 'login');
+      });
+    }
+
+    function sanitizeUsername(value) {
+      return value.trim().toLowerCase();
+    }
+
+    function setError(elementId, message) {
+      const element = document.getElementById(elementId);
+      if (!element) return;
+      element.textContent = message;
+      element.classList.add('show');
+    }
+
+    function clearErrors() {
+      document.querySelectorAll('.form-error').forEach((item) => {
+        item.textContent = '';
+        item.classList.remove('show');
+      });
+    }
+
+    function validateCredentials(username, password) {
+      const accounts = loadAccounts();
+      const userKey = sanitizeUsername(username);
+      const account = accounts[userKey];
+      if (!account) {
+        return { success: false, error: 'Account not found. Please sign up.' };
+      }
+      if (account.password !== password) {
+        return { success: false, error: 'Invalid email or password' };
+      }
+      return {
+        success: true,
+        user: { id: userKey.split('@')[0], email: username, name: account.name || username }
+      };
+    }
+
+    function validateSignup(name, username, password, confirm) {
+      if (!name.trim()) return { success: false, field: 'name-error', error: 'Full name is required' };
+      if (!username.trim()) return { success: false, field: 'username-error', error: 'Email or Student ID is required' };
+      if (!password) return { success: false, field: 'password-error', error: 'Password is required' };
+      if (password.length < 6) return { success: false, field: 'password-error', error: 'Password must be at least 6 characters' };
+      if (password !== confirm) return { success: false, field: 'confirm-error', error: 'Passwords do not match' };
+      const accounts = loadAccounts();
+      const userKey = sanitizeUsername(username);
+      if (accounts[userKey]) return { success: false, field: 'username-error', error: 'This account already exists' };
+      return { success: true };
+    }
+
+    function createAccount(name, username, password) {
+      const accounts = loadAccounts();
+      const userKey = sanitizeUsername(username);
+      accounts[userKey] = { name: name.trim(), password, created: new Date().toISOString() };
+      saveAccounts(accounts);
+      return { id: userKey.split('@')[0], email: username, name: name.trim() };
+    }
+
+    function createToken(userId) {
+      return 'token_' + userId + '_' + Date.now() + '_' + Math.random().toString(36).slice(2, 11);
+    }
+
+    function redirectToApp() {
+      const redirectDest = sessionStorage.getItem('redirect_after_login') || 'app.html';
+      sessionStorage.removeItem('redirect_after_login');
+      window.location.href = redirectDest;
+    }
+
+    tabs.forEach((tab) => {
+      tab.addEventListener('click', () => setMode(tab.dataset.mode));
+    });
+
+    attachSwitchLink();
+    setMode('login');
+
+    authForm.addEventListener('submit', async (event) => {
+      event.preventDefault();
+      clearErrors();
+
+      const username = usernameInput.value.trim();
+      const password = passwordInput.value;
+      const remember = rememberCheckbox.checked;
+
+      if (currentMode === 'signup') {
+        const fullName = fullNameInput.value.trim();
+        const confirmPassword = confirmPasswordInput.value;
+        const result = validateSignup(fullName, username, password, confirmPassword);
+        if (!result.success) {
+          setError(result.field, result.error);
+          return;
+        }
+
+        const user = createAccount(fullName, username, password);
+        const token = createToken(user.id);
+        localStorage.setItem('nav_sys_user', JSON.stringify(user));
+        localStorage.setItem('nav_sys_token', token);
+        localStorage.setItem('nav_sys_timestamp', new Date().toISOString());
+        if (remember) {
+          localStorage.setItem('nav_sys_remember', 'true');
+        } else {
+          localStorage.removeItem('nav_sys_remember');
+        }
+        redirectToApp();
+        return;
+      }
+
+      if (!username) {
+        setError('username-error', 'Email or Student ID is required');
+        return;
+      }
+
+      if (!password) {
+        setError('password-error', 'Password is required');
+        return;
+      }
+
+      const button = authForm.querySelector('.login-button');
+      const originalText = button.innerHTML;
+      button.classList.add('loading');
+      button.innerHTML = '<span class="button-text">Signing in...</span>';
+      await new Promise((resolve) => setTimeout(resolve, 500));
+
+      const result = validateCredentials(username, password);
+      if (result.success) {
+        const token = createToken(result.user.id);
+        localStorage.setItem('nav_sys_user', JSON.stringify(result.user));
+        localStorage.setItem('nav_sys_token', token);
+        localStorage.setItem('nav_sys_timestamp', new Date().toISOString());
+        if (remember) localStorage.setItem('nav_sys_remember', 'true'); else localStorage.removeItem('nav_sys_remember');
+        redirectToApp();
+        return;
+      }
+
+      button.classList.remove('loading');
+      button.innerHTML = originalText;
+      setError('password-error', result.error);
+      passwordInput.value = '';
+      passwordInput.focus();
+    });
+  </script>
+  <script>
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('sw.js');
+      });
+    }
+  </script>
+</body>
+</html>
