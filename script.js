@@ -1814,3 +1814,20 @@ if (document.readyState === 'loading') {
 } else {
   initializeUserMenu();
 }
+const userMenu = document.getElementById('user-menu');
+const userTrigger = document.querySelector('.user-menu-trigger');
+
+if (userMenu && userTrigger) {
+
+  userTrigger.addEventListener('click', (e) => {
+    e.stopPropagation();
+    userMenu.classList.toggle('active');
+  });
+
+  document.addEventListener('click', (e) => {
+    if (!userMenu.contains(e.target)) {
+      userMenu.classList.remove('active');
+    }
+  });
+
+}
