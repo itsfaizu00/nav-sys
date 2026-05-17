@@ -1754,6 +1754,7 @@ function initializeUserMenu() {
   const logoutBtn = document.getElementById('logout-btn');
 
   if (!user || !userMenu) return;
+  const trigger = userMenu.querySelector('.user-menu-trigger');
 
   // Populate user menu
   const userName = userMenu.querySelector('.user-name');
@@ -1766,6 +1767,36 @@ function initializeUserMenu() {
 
   // Show user menu
   userMenu.classList.remove('hidden');
+
+  const setMenuOpen = (isOpen) => {
+    userMenu.classList.toggle('open', isOpen);
+    if (trigger) trigger.setAttribute('aria-expanded', String(isOpen));
+  };
+
+  if (trigger) {
+    trigger.addEventListener('click', (event) => {
+      event.stopPropagation();
+      setMenuOpen(!userMenu.classList.contains('open'));
+    });
+
+    trigger.addEventListener('keydown', (event) => {
+      if (event.key === 'Enter' || event.key === ' ') {
+        event.preventDefault();
+        setMenuOpen(!userMenu.classList.contains('open'));
+      } else if (event.key === 'Escape') {
+        setMenuOpen(false);
+        trigger.blur();
+      }
+    });
+  }
+
+  document.addEventListener('click', (event) => {
+    if (!userMenu.contains(event.target)) setMenuOpen(false);
+  });
+
+  document.addEventListener('keydown', (event) => {
+    if (event.key === 'Escape') setMenuOpen(false);
+  });
 
   // Logout handler
   if (logoutBtn) {

@@ -31,6 +31,7 @@
 html, body {
   width: 100%; height: 100%;
   overflow: hidden;
+  overscroll-behavior: none;
   background: var(--clr-bg);
   font-family: var(--font-body);
   color: var(--clr-text);
@@ -998,7 +999,7 @@ html, body {
 
 .user-menu-dropdown {
   position: absolute;
-  top: calc(100% + 8px);
+  top: calc(100% + 6px);
   right: 0;
   background: var(--clr-panel);
   border: 1px solid var(--clr-border);
@@ -1007,11 +1008,28 @@ html, body {
   padding: 12px;
   min-width: 240px;
   display: none;
-  animation: slideDown 0.2s cubic-bezier(0.22, 1, 0.36, 1) both;
+  z-index: 1100;
+  animation: userMenuIn 0.16s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.user-menu-dropdown::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 100%;
+  height: 10px;
+}
+
+@keyframes userMenuIn {
+  from { opacity: 0; transform: translateY(-6px); }
+  to   { opacity: 1; transform: translateY(0); }
 }
 
 .user-menu-trigger:hover ~ .user-menu-dropdown,
-.user-menu-dropdown:hover {
+.user-menu-dropdown:hover,
+#user-menu.open .user-menu-dropdown,
+#user-menu:focus-within .user-menu-dropdown {
   display: block;
 }
 
@@ -1072,5 +1090,279 @@ html, body {
 
   .user-menu-dropdown {
     min-width: 200px;
+  }
+}
+
+/* ── RESPONSIVE POLISH OVERRIDES ───────── */
+@media (max-width: 900px) {
+  #control-panel {
+    top: max(10px, env(safe-area-inset-top));
+    width: min(720px, calc(100vw - 20px));
+  }
+
+  #panel-inner {
+    align-items: stretch;
+    gap: 14px;
+    padding: 14px 16px;
+  }
+
+  #brand {
+    padding-right: 16px;
+  }
+
+  #selectors {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 42px minmax(0, 1fr);
+    gap: 10px;
+    align-items: end;
+    min-width: 0;
+  }
+
+  .select-wrap {
+    min-width: 0;
+  }
+
+  .select-wrap select {
+    width: 100%;
+    min-width: 0;
+  }
+
+  #swap-btn,
+  #route-btn,
+  #clear-btn,
+  #gps-btn {
+    margin-top: 0;
+  }
+
+  #route-btn {
+    grid-column: 1 / 2;
+    width: 100%;
+    min-height: 44px;
+  }
+
+  #clear-btn {
+    grid-column: 2 / 3;
+  }
+
+  #gps-btn {
+    grid-column: 3 / 4;
+    justify-self: end;
+  }
+}
+
+@media (max-width: 768px) {
+  :root {
+    --radius-panel: 16px;
+    --radius-btn: 10px;
+  }
+
+  #control-panel {
+    top: calc(54px + env(safe-area-inset-top));
+    width: min(420px, calc(100vw - 16px));
+    max-width: none;
+  }
+
+  #panel-inner {
+    padding: 10px;
+    border-radius: var(--radius-panel);
+    flex-direction: column;
+    gap: 10px;
+    max-height: calc(100dvh - 132px);
+    overflow: visible;
+  }
+
+  #brand {
+    display: flex;
+    width: 100%;
+    justify-content: flex-start;
+    border-right: none;
+    border-bottom: 1px solid var(--clr-border);
+    padding: 0 0 8px;
+    margin: 0;
+  }
+
+  .brand-text {
+    font-size: 13px;
+  }
+
+  .brand-sub {
+    display: block;
+    font-size: 8px;
+  }
+
+  #selectors {
+    width: 100%;
+    grid-template-columns: minmax(0, 1fr) 40px minmax(0, 1fr);
+    gap: 8px;
+  }
+
+  .select-wrap {
+    gap: 4px;
+  }
+
+  .select-wrap label {
+    font-size: 8px;
+    line-height: 1;
+    padding-left: 2px;
+  }
+
+  .select-wrap select {
+    min-height: 42px;
+    font-size: 16px;
+    padding: 9px 30px 9px 10px;
+    background-position: right 10px center;
+    border-radius: 10px;
+  }
+
+  #swap-btn,
+  #clear-btn,
+  #gps-btn {
+    width: 40px;
+    height: 42px;
+    padding: 0;
+    border-radius: 10px;
+  }
+
+  #route-btn {
+    min-height: 42px;
+    padding: 10px 12px;
+    font-size: 13px;
+    border-radius: 10px;
+  }
+
+  #user-menu {
+    top: calc(8px + env(safe-area-inset-top));
+    right: 8px;
+    z-index: 1200;
+  }
+
+  .user-menu-trigger {
+    min-height: 38px;
+    padding: 7px 10px;
+  }
+
+  .user-menu-dropdown {
+    right: 0;
+    min-width: min(240px, calc(100vw - 16px));
+    max-width: calc(100vw - 16px);
+  }
+
+  .leaflet-top {
+    top: calc(176px + env(safe-area-inset-top));
+  }
+
+  .leaflet-bottom {
+    bottom: calc(68px + env(safe-area-inset-bottom));
+  }
+
+  .leaflet-control-zoom {
+    margin-right: 8px !important;
+    margin-bottom: 8px !important;
+  }
+
+  .leaflet-control-zoom a {
+    width: 40px !important;
+    height: 40px !important;
+    line-height: 38px !important;
+  }
+
+  .leaflet-control-attribution {
+    max-width: calc(100vw - 74px);
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+  }
+
+  #status-bar {
+    bottom: calc(8px + env(safe-area-inset-bottom));
+    width: min(420px, calc(100vw - 16px));
+    max-width: none;
+    z-index: 900;
+  }
+
+  #status-inner {
+    min-height: 46px;
+    padding: 9px 12px;
+    gap: 8px;
+    border-radius: 18px;
+  }
+
+  #status-icon {
+    font-size: 15px;
+  }
+
+  #status-text {
+    font-size: 12px;
+    white-space: normal;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+  }
+
+  #status-dist {
+    font-size: 11px;
+    padding: 4px 8px;
+  }
+
+  #nav-panel {
+    bottom: calc(64px + env(safe-area-inset-bottom));
+    left: 8px;
+    right: 8px;
+    max-width: 420px;
+  }
+}
+
+@media (max-width: 380px) {
+  #control-panel {
+    top: calc(50px + env(safe-area-inset-top));
+    width: calc(100vw - 10px);
+  }
+
+  #panel-inner {
+    padding: 8px;
+    gap: 8px;
+  }
+
+  #brand {
+    padding-bottom: 6px;
+  }
+
+  .brand-dot,
+  .brand-sub {
+    display: none;
+  }
+
+  .brand-text {
+    font-size: 12px;
+  }
+
+  #selectors {
+    grid-template-columns: minmax(0, 1fr) 36px minmax(0, 1fr);
+    gap: 6px;
+  }
+
+  .select-wrap select {
+    min-height: 40px;
+    padding: 8px 28px 8px 9px;
+  }
+
+  #swap-btn,
+  #clear-btn,
+  #gps-btn {
+    width: 36px;
+    height: 40px;
+  }
+
+  #route-btn {
+    min-height: 40px;
+    padding-inline: 8px;
+  }
+
+  .btn-icon {
+    display: none;
+  }
+
+  .leaflet-top {
+    top: calc(160px + env(safe-area-inset-top));
   }
 }
